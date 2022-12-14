@@ -43,6 +43,7 @@ public class ArgsParser {
     public static final int DEFAULT_NUM_ANALYSIS_THREADS = Runtime.getRuntime().availableProcessors();
     public static final boolean DEFAULT_IS_TEST_MODE = false;
     public static final boolean DEFAULT_SHOULD_FRESH_CLONE = false;
+    public static final boolean DEFAULT_USE_PRETTY_JSON = false;
 
     public static final String[] HELP_FLAGS = new String[] {"--help", "-h"};
     public static final String[] CONFIG_FLAGS = new String[] {"--config", "-c"};
@@ -61,6 +62,7 @@ public class ArgsParser {
     public static final String[] VERSION_FLAGS = new String[] {"--version", "-V"};
     public static final String[] LAST_MODIFIED_DATE_FLAGS = new String[] {"--last-modified-date", "-l"};
     public static final String[] FIND_PREVIOUS_AUTHORS_FLAGS = new String[] {"--find-previous-authors", "-F"};
+    public static final String[] PRETTY_JSON_FLAGS = new String[] {"--use-json-pretty-printing", "-j"};
 
     public static final String[] CLONING_THREADS_FLAG = new String[] {"--cloning-threads"};
     public static final String[] ANALYSIS_THREADS_FLAG = new String[] {"--analysis-threads"};
@@ -200,6 +202,11 @@ public class ArgsParser {
                         + "will attempt to blame the line changes caused by commits in the ignore commit list to the "
                         + "previous authors who altered those lines (if available)");
 
+        parser.addArgument(PRETTY_JSON_FLAGS)
+                .dest(PRETTY_JSON_FLAGS[0])
+                .action(Arguments.storeTrue())
+                .help("A flag to make the report json files more readable");
+
         // Mutex flags - these will always be the last parameters in help message.
         mutexParser.addArgument(CONFIG_FLAGS)
                 .dest(CONFIG_FLAGS[0])
@@ -283,6 +290,7 @@ public class ArgsParser {
             boolean shouldIncludeLastModifiedDate = results.get(LAST_MODIFIED_DATE_FLAGS[0]);
             boolean shouldPerformShallowCloning = results.get(SHALLOW_CLONING_FLAGS[0]);
             boolean shouldFindPreviousAuthors = results.get(FIND_PREVIOUS_AUTHORS_FLAGS[0]);
+            boolean shouldPrintPrettyJson = results.getBoolean(PRETTY_JSON_FLAGS[0]);
 
             // Report config is ignored if --repos is provided
             if (locations == null) {
@@ -384,7 +392,7 @@ public class ArgsParser {
                     isSinceDateProvided, isUntilDateProvided, numCloningThreads, numAnalysisThreads, formats,
                     shouldIncludeLastModifiedDate, shouldPerformShallowCloning, isAutomaticallyLaunching,
                     isStandaloneConfigIgnored, isFileSizeLimitIgnored, zoneId, reportConfig, shouldFindPreviousAuthors,
-                    isTestMode, shouldPerformFreshCloning);
+                    isTestMode, shouldPerformFreshCloning, shouldPrintPrettyJson);
         } catch (HelpScreenException hse) {
             throw hse;
         } catch (ArgumentParserException ape) {

@@ -117,7 +117,8 @@ public class ReportGenerator {
             ReportConfiguration reportConfig, String generationDate, LocalDateTime cliSinceDate,
             LocalDateTime untilDate, boolean isSinceDateProvided, boolean isUntilDateProvided, int numCloningThreads,
             int numAnalysisThreads, Supplier<String> reportGenerationTimeProvider, ZoneId zoneId,
-            boolean shouldFreshClone) throws IOException {
+            boolean shouldFreshClone, boolean usePrettyJson) throws IOException {
+        FileUtil.setUsePrettyJsonPrinting(usePrettyJson);
         prepareTemplateFile(outputPath);
         if (Files.exists(Paths.get(assetsPath))) {
             FileUtil.copyDirectoryContents(assetsPath, outputPath, assetsFilesWhiteList);
